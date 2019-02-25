@@ -91,23 +91,23 @@ export default class MainView extends React.Component {
   }
 
   getTag(props = this.props) {
-    return (props.location.queryParams).tag || "";
+    return (props.location.queryParams || {}).tag || "";
   }
 
   getTab(props = this.props) {
-    return (props.location.queryParams).tab || 'all';
+    return (props.location.queryParams || {}).tab || 'all';
   }
 
   getPredicate(props = this.props) {
     switch (this.getTab(props)) {
       case 'feed': return { myFeed: true };
-      case 'tag': return { tag: (props.location.queryParams).tag };
+      case 'tag': return { tag: (props.location.queryParams || {}).tag };
       default: return {};
     }
   }
 
   handleTabChange = (tab) => {
-    if (this.props.location.queryParams.tab === tab) return;
+    if (this.props.location.queryParams && this.props.location.queryParams.tab === tab) return;
     this.props.router.push({ ...this.props.location, queryParams: { tab } })
   };
 
@@ -134,7 +134,7 @@ export default class MainView extends React.Component {
               tab={this.getTab()}
             />
 
-            <TagFilterTab tag={(this.props.location.queryParams).tag} />
+            <TagFilterTab tag={(this.props.location.queryParams || {}).tag} />
 
           </ul>
         </div>
