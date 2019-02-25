@@ -11,3 +11,5 @@
 - 新增 react-loadable 用来实现按需加载，并且 react-scripts 中的默认配置会为此分开打包
 
 此外由于 mobx-router 中 url 中传参替换的[正则表达式](https://github.com/kitze/mobx-router/blob/master/src/regex.js)只匹配 '/:', 故先删去了 '/@:username' 中的 @. 到时候向作者提个 issues, 或者自己 fork 改。
+
+# ![build_result](build_result.png)
