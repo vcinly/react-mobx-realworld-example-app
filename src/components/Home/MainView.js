@@ -1,8 +1,9 @@
 import ArticleList from '../ArticleList';
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { withRouter, NavLink } from 'react-router-dom'
-import { parse as qsParse } from 'query-string';
+// import { withRouter, NavLink } from 'react-router-dom'
+// import { parse as qsParse } from 'query-string';
+import { NavLink } from '../NavLink'
 
 const YourFeedTab = props => {
   if (props.currentUser) {
@@ -13,13 +14,11 @@ const YourFeedTab = props => {
           className="nav-link"
           isActive={
             (match, location) => {
-              return location.search.match("tab=feed") ? 1 : 0;
+              return location.queryParams && location.queryParams.tab && location.queryParams.tab.match("feed") ? 1 : 0;
             }
           }
-          to={{
-            pathname: "/",
-            search: "?tab=feed"
-          }}
+          to="/"
+          queryParams={{tab:'feed'}}
         >
           Your Feed
         </NavLink>
@@ -36,13 +35,11 @@ const GlobalFeedTab = props => {
         className="nav-link"
         isActive={
           (match, location) => {
-            return !location.search.match(/tab=(feed|tag)/) ? 1 : 0;
+            return !(location.queryParams && location.queryParams.tab && location.queryParams.tab.match(/(feed|tag)/)) ? 1 : 0;
           }
         }
-        to={{
-          pathname: "/",
-          search: "?tab=all"
-        }}
+        to="/"
+        queryParams={{tab:'all'}}
       >
         Global Feed
       </NavLink>
@@ -64,13 +61,14 @@ const TagFilterTab = props => {
   );
 };
 
-@inject('articlesStore', 'commonStore', 'userStore')
-@withRouter
+@inject('articlesStore', 'commonStore', 'userStore', 'location', 'match', 'views')
+// @withRouter
 @observer
 export default class MainView extends React.Component {
 
   componentWillMount() {
     this.props.articlesStore.setPredicate(this.getPredicate());
+    this.props.views.home.onParamsChange = () => {this.getData(this.props)};
   }
 
   componentDidMount() {
@@ -87,25 +85,30 @@ export default class MainView extends React.Component {
     }
   }
 
+  getData(props = this.props) {
+    props.articlesStore.setPredicate(this.getPredicate());
+    props.articlesStore.loadArticles();
+  }
+
   getTag(props = this.props) {
-    return qsParse(props.location.search).tag || "";
+    return (props.location.queryParams).tag || "";
   }
 
   getTab(props = this.props) {
-    return qsParse(props.location.search).tab || 'all';
+    return (props.location.queryParams).tab || 'all';
   }
 
   getPredicate(props = this.props) {
     switch (this.getTab(props)) {
       case 'feed': return { myFeed: true };
-      case 'tag': return { tag: qsParse(props.location.search).tag };
+      case 'tag': return { tag: (props.location.queryParams).tag };
       default: return {};
     }
   }
 
   handleTabChange = (tab) => {
-    if (this.props.location.query.tab === tab) return;
-    this.props.router.push({ ...this.props.location, query: { tab } })
+    if (this.props.location.queryParams.tab === tab) return;
+    this.props.router.push({ ...this.props.location, queryParams: { tab } })
   };
 
   handleSetPage = page => {
@@ -131,7 +134,7 @@ export default class MainView extends React.Component {
               tab={this.getTab()}
             />
 
-            <TagFilterTab tag={qsParse(this.props.location.search).tag} />
+            <TagFilterTab tag={(this.props.location.queryParams).tag} />
 
           </ul>
         </div>

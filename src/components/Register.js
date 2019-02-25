@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from './Link';
 import ListErrors from './ListErrors';
 import React from 'react';
 import { inject, observer } from 'mobx-react';
@@ -17,7 +17,10 @@ export default class Register extends React.Component {
   handleSubmitForm = (e) => {
     e.preventDefault();
     this.props.authStore.register()
-      .then(() => this.props.history.replace('/'));
+      //.then(() => this.props.history.replace('/'));
+      .then(() => 
+        this.props.router.goTo(this.props.views.home)
+      );
   };
 
   render() {

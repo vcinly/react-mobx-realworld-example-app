@@ -1,11 +1,11 @@
 import ListErrors from './ListErrors';
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
 
 
-@inject('editorStore')
-@withRouter
+@inject('editorStore', 'match', 'views', 'router')
+// @withRouter
 @observer
 export default class Editor extends React.Component {
 
@@ -64,7 +64,8 @@ export default class Editor extends React.Component {
     editorStore.submit()
       .then(article => {
         editorStore.reset();
-        this.props.history.replace(`/article/${article.slug}`)
+        // this.props.history.replace(`/article/${article.slug}`)
+        this.props.router.goTo(this.props.views.article, {id: article.slug})
       });
   };
 

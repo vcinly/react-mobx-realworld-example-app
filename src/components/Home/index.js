@@ -3,10 +3,10 @@ import MainView from './MainView';
 import React from 'react';
 import Tags from './Tags';
 import { inject, observer } from 'mobx-react';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
 
 @inject('commonStore')
-@withRouter
+// @withRouter
 @observer
 export default class Home extends React.Component {
   componentDidMount() {

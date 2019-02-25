@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from '../Link';
 import React from 'react';
 
 const ArticleActions = props => {
@@ -12,6 +12,7 @@ const ArticleActions = props => {
         <Link
           to={`/editor/${article.slug}`}
           className="btn btn-outline-secondary btn-sm"
+          params={{slug: article.slug}}
         >
           <i className="ion-edit" /> Edit Article
         </Link>

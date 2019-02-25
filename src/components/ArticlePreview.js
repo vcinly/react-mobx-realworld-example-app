@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
+import Link from './Link';
 
 const FAVORITED_CLASS = 'btn btn-sm btn-primary';
 const NOT_FAVORITED_CLASS = 'btn btn-sm btn-outline-primary';
@@ -27,12 +27,12 @@ export default class ArticlePreview extends React.Component {
     return (
       <div className="article-preview">
         <div className="article-meta">
-          <Link to={`/@${article.author.username}`}>
+          <Link to={`/@${article.author.username}`} params={{username: article.author.username}}>
             <img src={article.author.image} alt="" />
           </Link>
 
           <div className="info">
-            <Link className="author" to={`/@${article.author.username}`}>
+            <Link className="author" to={`/@${article.author.username}`} params={{username: article.author.username}}>
               {article.author.username}
             </Link>
             <span className="date">
@@ -47,7 +47,7 @@ export default class ArticlePreview extends React.Component {
           </div>
         </div>
 
-        <Link to={`/article/${article.slug}`} className="preview-link">
+        <Link to={`/article/${article.slug}`} className="preview-link" params={{id: article.slug}}>
           <h1>{article.title}</h1>
           <p>{article.description}</p>
           <span>Read more...</span>

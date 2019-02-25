@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from '../Link';
 import LoadingSpinner from '../LoadingSpinner';
 
 const Tags = props => {
@@ -12,12 +12,10 @@ const Tags = props => {
 
             return (
               <Link
-                to={{
-                  pathname: "/",
-                  search: "?tab=tag&tag=" + tag
-                }}
+                to="/"
                 className="tag-default tag-pill"
                 key={tag}
+                queryParams={{tab: 'tag', tag: tag}}
               >
                 {tag}
               </Link>

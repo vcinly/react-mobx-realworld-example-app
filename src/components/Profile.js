@@ -2,8 +2,9 @@ import ArticleList from './ArticleList';
 import React from 'react';
 import LoadingSpinner from './LoadingSpinner';
 import RedError from './RedError';
-import { NavLink, Link, withRouter } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
+import { NavLink } from './NavLink'
+import Link from './Link';
 
 const EditProfileSettings = props => {
   if (props.isUser) {
@@ -52,12 +53,14 @@ const FollowUserButton = props => {
 };
 
 
-@inject('articlesStore', 'profileStore', 'userStore')
-@withRouter
+@inject('articlesStore', 'profileStore', 'userStore', 'match', 'location', 'views')
+// @withRouter
 @observer
 export default class Profile extends React.Component {
   componentWillMount() {
     this.props.articlesStore.setPredicate(this.getPredicate());
+    this.props.views.profile.onEnter = () => { this.getData(this.props) };
+    this.props.views.favorites.onEnter = () => { this.getData(this.props) };
   }
 
   componentDidMount() {
@@ -73,8 +76,14 @@ export default class Profile extends React.Component {
     }
   }
 
+  getData(props = this.props) {
+    props.profileStore.loadProfile(props.match.params.username);
+    props.articlesStore.setPredicate(this.getPredicate());
+    props.articlesStore.loadArticles();
+  }
+
   getTab() {
-    if (/\/favorites/.test(this.props.location.pathname)) return 'favorites';
+    if (/\/favorites/.test(this.props.location.currentView.path)) return 'favorites';
     return 'all'
   }
 
@@ -102,10 +111,11 @@ export default class Profile extends React.Component {
             className="nav-link"
             isActive={
               (match, location) => {
-                return location.pathname.match("/favorites") ? 0 : 1;
+                return location.currentView.path.match("/favorites") ? 0 : 1;
               }
             }
             to={`/@${profile.username}`}
+            params={{username: profile.username}}
           >
             My Articles
           </NavLink>
@@ -115,6 +125,12 @@ export default class Profile extends React.Component {
           <NavLink
             className="nav-link"
             to={`/@${profile.username}/favorites`}
+            params={{username: profile.username, favorites: true}}
+            isActive={
+              (match, location) => {
+                return location.currentView.path.match("/favorites") ? 1 : 0;
+              }
+            }
           >
             Favorited Articles
           </NavLink>

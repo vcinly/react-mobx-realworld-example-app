@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from './Link';
 import { inject, observer } from 'mobx-react';
 
 const LoggedOutView = props => {
@@ -58,6 +58,7 @@ const LoggedInView = props => {
           <Link
             to={`/@${props.currentUser.username}`}
             className="nav-link"
+            params={{username: props.currentUser.username}}
           >
             <img src={props.currentUser.image} className="user-pic" alt="" />
             {props.currentUser.username}

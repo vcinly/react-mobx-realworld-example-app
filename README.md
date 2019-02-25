@@ -1,67 +1,13 @@
 # ![React + Mobx Example App](project-logo.png)
 
-> ### React + Mobx codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) spec and API.
+### 替换 react-route 为 mobx-router
 
-### [Demo](https://react-mobx.realworld.io/)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/gothinkster/realworld)
+主要有一下几点
+- 创建路由文件 views
+- 对应 react-route 创建 Link 和 NavLink 组件
+- 修改 Link 传参方式
+- 替换 react-route 中 history, match, location 的调用方式
+- 使用 mobx-router 中的 onParamsChange 和 onEnter 来判断 url 中 params 或 queryParams 变化用以刷新
+- 新增 react-loadable 用来实现按需加载，并且 react-scripts 中的默认配置会为此分开打包
 
-Originally created for this [GH issue](https://github.com/reactjs/Redux/issues/1353). The codebase is now feature complete; please submit bug fixes via pull requests & feedback via issues.
-
-We're currently working on some docs for the codebase (explaining where functionality is located, how it works, etc) but most things should be self explanatory if you have a minimal understanding of React/Mobx.
-
-
-## Getting started
-
-You can view a live demo over at https://react-mobx.realworld.io/
-
-To get the frontend running locally:
-
-- Clone this repo
-- `npm install` to install all req'd dependencies
-- `npm start` to start the local server (this project uses create-react-app)
-
-
-### Making requests to the backend API
-
-For convenience, we have a live API server running at https://conduit.productionready.io/api for the application to make requests against. You can view [the API spec here](https://github.com/GoThinkster/productionready/blob/master/api) which contains all routes & responses for the server.
-
-The source code for the backend server (available for Node, Rails and Django) can be found in the [main RealWorld repo](https://github.com/gothinkster/realworld).
-
-If you want to change the API URL to a local server, simply edit `src/agent.js` and change `API_ROOT` to the local server's URL (i.e. `localhost:3000/api`)
-
-
-## Functionality overview
-
-The example application is a social blogging site (i.e. a Medium.com clone) called "Conduit". It uses a custom API for all requests, including authentication. You can view a live demo over at https://react-mobx.realworld.io/
-
-**General functionality:**
-
-- Authenticate users via JWT (login/signup pages + logout button on settings page)
-- CRU* users (sign up & settings page - no deleting required)
-- CRUD Articles
-- CR*D Comments on articles (no updating required)
-- GET and display paginated lists of articles
-- Favorite articles
-- Follow other users
-
-**The general page breakdown looks like this:**
-
-- Home page (URL: /#/ )
-    - List of tags
-    - List of articles pulled from either Feed, Global, or by Tag
-    - Pagination for list of articles
-- Sign in/Sign up pages (URL: /#/login, /#/register )
-    - Use JWT (store the token in localStorage)
-- Settings page (URL: /#/settings )
-- Editor page to create/edit articles (URL: /#/editor, /#/editor/article-slug-here )
-- Article page (URL: /#/article/article-slug-here )
-    - Delete article button (only shown to article's author)
-    - Render markdown from server client side
-    - Comments section at bottom of page
-    - Delete comment button (only shown to comment's author)
-- Profile page (URL: /#/@username, /#/@username/favorites )
-    - Show basic user info
-    - List of articles populated from author's created articles or author's favorited articles
-
-<br />
-
-[![Brought to you by Thinkster](https://raw.githubusercontent.com/gothinkster/realworld/master/media/end.png)](https://thinkster.io)
+此外由于 mobx-router 中 url 中传参替换的[正则表达式](https://github.com/kitze/mobx-router/blob/master/src/regex.js)只匹配 '/:', 故先删去了 '/@:username' 中的 @. 到时候向作者提个 issues, 或者自己 fork 改。
